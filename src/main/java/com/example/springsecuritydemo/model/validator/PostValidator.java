@@ -1,9 +1,9 @@
 package com.example.springsecuritydemo.model.validator;
 
+import com.example.springsecuritydemo.model.Post;
 import com.example.springsecuritydemo.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class UserValidator implements Consumer<User> {
+public class PostValidator implements Consumer<Post> {
     private final Validator validator;
 
-    public void accept(List<User> users){
-        users.forEach(this::accept);
+    public void accept(List< Post > users){
+      users.forEach(this::accept);
     }
 
     @Override
-    public void accept(User user) {
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
+    public void accept(Post post) {
+        Set<ConstraintViolation<Post>> violations = validator.validate(post);
 
         if(!violations.isEmpty()){
             String violationMessages = violations.stream()

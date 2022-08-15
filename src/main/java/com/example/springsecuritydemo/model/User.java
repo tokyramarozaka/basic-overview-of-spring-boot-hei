@@ -1,11 +1,12 @@
-package com.example.springsecuritydemo.controller;
+package com.example.springsecuritydemo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +25,15 @@ public class User implements Serializable {
 
     private String lastName;
 
+    @Email
     @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "Username must not be blank")
     @Column(nullable = false)
     private String username;
 
+    @NotNull
+    @NotEmpty
     private String password;
 }

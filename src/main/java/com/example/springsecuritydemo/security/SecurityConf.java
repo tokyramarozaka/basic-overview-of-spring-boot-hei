@@ -15,8 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
+@EnableWebSecurity
 @Slf4j
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConf extends WebSecurityConfigurerAdapter {
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -24,20 +26,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/posts**").permitAll()
-                .antMatchers(HttpMethod.GET, "/users**").authenticated()
+                .antMatchers(HttpMethod.GET,"/posts/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/users/**").hasRole("admin")
                 .and()
-                .formLogin().permitAll()
+                .formLogin()
                 .and()
-                .logout().permitAll()
+                .logout()
                 .and()
+                .csrf().disable()
                 .httpBasic();
     }
 
     @Bean
-    @Override
     protected UserDetailsService userDetailsService() {
         UserDetails student = User.builder()
                 .username("student")

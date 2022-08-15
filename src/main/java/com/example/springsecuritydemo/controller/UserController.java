@@ -1,15 +1,47 @@
 package com.example.springsecuritydemo.controller;
 
+import com.example.springsecuritydemo.model.Post;
+import com.example.springsecuritydemo.model.User;
 import com.example.springsecuritydemo.repository.UserRepository;
+import com.example.springsecuritydemo.service.PostService;
+import com.example.springsecuritydemo.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+import javax.validation.Valid;
+import java.util.List;
+
+@AllArgsConstructor
 @RestController
 @CrossOrigin
-@RequestMapping("/users")
-public class UsearController {
-    private UserRepository userRepository
+public class UserController {
+    private UserService userService;
+    private PostService postService;
+
+    @GetMapping("/")
+    public String hello(){
+        return "Hello world";
+    }
+
+    @GetMapping("/users")
+    public List<User> getUsers(){
+        return userService.getAll();
+    }
+
+    @GetMapping("/users/{userId}")
+    public User getUserById(@PathVariable Long userId){
+        return userService.getById(userId);
+    }
+
+    @GetMapping("/users/{userId}/posts")
+    public List<Post> getUserPosts(@PathVariable Long userId){
+        return postService.getPostsByUserId(userId);
+    }
+
+    @PostMapping("/users")
+    public List<User> saveUsers(@RequestBody @Valid List<User> users){
+        return userService.saveAll(users);
+    }
 }
